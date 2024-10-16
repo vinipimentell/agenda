@@ -26,6 +26,57 @@ public class DAO {
 			return null;
 		}
 	}
+	
+	public boolean inserirViagem(Viagem viagem) {
+	    String create = "INSERT INTO viagens(destino, data_partida, data_retorno, capacidade) VALUES (?, ?, ?, ?)";
+	    try {
+	        Connection con = conectar();
+	        PreparedStatement pst = con.prepareStatement(create);
+	        // Substituir os parâmetros (?) pelo conteúdo do objeto Viagem
+	        pst.setString(1, viagem.getDestino());
+	        pst.setDate(2, java.sql.Date.valueOf(viagem.getDataPartida()));
+	        pst.setDate(3, java.sql.Date.valueOf(viagem.getDataRetorno()));
+	        pst.setInt(4, viagem.getCapacidade());
+
+	        int rowsAffected = pst.executeUpdate(); // Executa a inserção e retorna o número de linhas afetadas
+	        con.close();
+	        
+	        // Verifica se a inserção foi bem-sucedida
+	        if (rowsAffected > 0) {
+	            System.out.println("Viagem inserida com sucesso: " + viagem);
+	            return true; // Inserção bem-sucedida
+	        } else {
+	            System.out.println("Falha ao inserir a viagem: Nenhuma linha afetada.");
+	            return false; // Inserção falhou
+	        }
+	    } catch (Exception e) {
+	        System.out.println("Erro ao inserir viagem: " + e.getMessage());
+	        return false; // Retorna falso em caso de exceção
+	    }
+	}
+
+	    public ArrayList<Viagem> listarViagens() {
+	        ArrayList<Viagem> viagens = new ArrayList<>();
+	        String read = "SELECT * FROM viagens ORDER BY destino";
+	        try {
+	            Connection con = conectar();
+	            PreparedStatement pst = con.prepareStatement(read);
+	            ResultSet rs = pst.executeQuery();
+	            while (rs.next()) {
+	                Viagem viagem = new Viagem();
+	                viagem.setIdviagem(rs.getInt("idviagem"));
+	                viagem.setDestino(rs.getString("destino"));
+	                viagem.setDataPartida(rs.getDate("data_partida").toLocalDate());
+	                viagem.setDataRetorno(rs.getDate("data_retorno").toLocalDate());
+	                viagem.setCapacidade(rs.getInt("capacidade"));
+	                viagens.add(viagem);
+	            }
+	            con.close();
+	        } catch (Exception e) {
+	            System.out.println(e);
+	        }
+	        return viagens;
+	    }
 
 	public void inserirContato(JavaBeans contato) {
 		String create = "insert into contatos(nome,fone,email) values (?,?,?)";

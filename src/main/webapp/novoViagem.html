@@ -1,0 +1,33 @@
+<!DOCTYPE html> 
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Viagem</title>
+    <link rel="icon" href="imagens/favicon.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Cadastrar Nova Viagem</h1>
+        <a href="index.html" class="Botao">Voltar</a>
+    </header>
+    
+    <form name="frmViagem" action="insertViagem">
+        <table>
+            <tr>
+                <td><input type="text" name="destino" placeholder="Destino" class="Caixa1" required></td>
+            </tr>
+            <tr>
+                <td><input type="date" name="data_partida" class="Caixa1" required></td>
+            </tr>
+            <tr>
+                <td><input type="date" name="data_retorno" class="Caixa1" required></td>
+            </tr>
+            <tr>
+                <td><input type="number" name="capacidade" placeholder="Capacidade" class="Caixa2" required></td>
+            </tr>
+        </table>
+        <input type="submit" value="Adicionar Viagem" class="Botao">
+    </form>
+</body>
+</html>
