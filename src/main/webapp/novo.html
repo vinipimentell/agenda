@@ -1,27 +1,64 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>Agenda de contatos</title>
-<link rel="icon" href="imagens/favicon.png">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Cadastro de Passagem</title>
+    <link rel="icon" href="imagens/favicon.png">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<h1>Criar novo contato</h1>
-	<form name="frmContato" action="insert">
-		<table>
-			<tr>
-				<td><input type="text" name="nome" placeholder="Nome" class="Caixa1"></td>
-			</tr>
-			<tr>
-				<td><input type="text" name="fone" placeholder="Fone" class="Caixa2"></td>
-			</tr>
-			<tr>
-			<td><input type="text" name="email" placeholder="E-mail" class="Caixa1"></td>
-			</tr>
-		</table>
-		<input type="button" value="Adicionar" class="Botao" onclick="validar()">
-	</form>
-	<script src="scripts/validador.js"></script>
+    <header>
+        <h1>Cadastrar Passagem</h1>
+    </header>
+
+    <section>
+        <h2>Informações sobre a Segurança</h2>
+        <p>Na nossa agência, priorizamos a segurança e a satisfação dos nossos clientes. Todas as nossas passagens são adquiridas através de parceiros confiáveis, garantindo que você tenha a melhor experiência de viagem. Sinta-se seguro e confiante ao reservar sua passagem conosco!</p>
+    </section>
+
+    <form name="frmPassagem" action="insert">
+        <table>
+            <tr>
+                <th>Destino</th>
+                <td><input type="text" name="destino" placeholder="Digite o destino" class="Caixa1" required></td>
+            </tr>
+            <tr>
+                <th>Data de Partida</th>
+                <td><input type="date" name="data_partida" class="Caixa2" required></td>
+            </tr>
+            <tr>
+                <th>Data de Retorno</th>
+                <td><input type="date" name="data_retorno" class="Caixa2"></td>
+            </tr>
+            <tr>
+                <th>Nome do Passageiro</th>
+                <td><input type="text" name="nome" placeholder="Nome completo" class="Caixa1" required></td>
+            </tr>
+            <tr>
+                <th>Telefone</th>
+                <td><input type="text" name="fone" placeholder="Telefone de contato" class="Caixa2" required></td>
+            </tr>
+            <tr>
+                <th>E-mail</th>
+                <td><input type="email" name="email" placeholder="E-mail válido" class="Caixa1" required></td>
+            </tr>
+            <tr>
+                <th>ID (Interno)</th>
+                <td><input type="text" name="idcon" placeholder="ID (se necessário)" class="Caixa1"></td>
+            </tr>
+            <tr>
+                <th>Capacidade</th>
+                <td><input type="number" name="capacidade" placeholder="Capacidade de passageiros" class="Caixa1" min="1" required></td>
+            </tr>
+        </table>
+        <input type="submit" value="Cadastrar Passagem" class="Botao">
+        <a href="index.html" class="Botao">Desistir</a>
+    </form>
+
+    <footer>
+        <p>&copy; 2024 Sua Empresa</p>
+    </footer>
+
+    <script src="scripts/validador.js"></script>
 </body>
 </html>

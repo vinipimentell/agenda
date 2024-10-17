@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -13,97 +12,67 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.DAO;
 import model.JavaBeans;
-import model.Viagem;
 
-@WebServlet(urlPatterns = { "/Controller", "/main", "/insert", "/insertViagem", "/listarViagens" })
+@WebServlet(urlPatterns = { "/Controller", "/main", "/insert", "/delete" })
 public class Controller extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    DAO dao = new DAO();
-    JavaBeans contato = new JavaBeans();
-    Viagem viagem = new Viagem();
+	private static final long serialVersionUID = 1L;
+	DAO dao = new DAO();
+	JavaBeans viagem = new JavaBeans(); // Alterado para refletir o uso da classe com os novos atributos
 
-    public Controller() {
-        super();
-    }
+	public Controller() {
+		super();
+	}
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String action = request.getServletPath();
-        if (action.equals("/main")) {
-            contatos(request, response);
-        } else if (action.equals("/insert")) {
-            novoContato(request, response);
-        } else if (action.equals("/listarViagens")) {
-            listarViagens(request, response);
-        } else {
-            response.sendRedirect("index.html");
-        }
-    }
-    
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String action = request.getServletPath();
-        if (action.equals("/insertViagem")) {
-            novoViagem(request, response);
-        } else {
-            response.sendRedirect("index.html");
-        }
-    }
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String action = request.getServletPath();
+		if (action.equals("/main")) {
+			listarViagens(request, response);
+		} else if (action.equals("/insert")) {
+			novoContato(request, response);
+		} else if (action.equals("/delete")) {
+			removerContato(request, response, viagem);
+		} else {
+			response.sendRedirect("index.html");
+		}
+	}
 
-    // Listar contatos
-    protected void contatos(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        ArrayList<JavaBeans> lista = dao.listarContatos();
-        request.setAttribute("contatos", lista);
-        RequestDispatcher rd = request.getRequestDispatcher("agenda.jsp");
-        rd.forward(request, response);
-    }
+	// Listar viagens
+	protected void listarViagens(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		ArrayList<JavaBeans> lista = dao.listarContatos();
+		request.setAttribute("contatos", lista);
+		RequestDispatcher rd = request.getRequestDispatcher("agenda.jsp");
+		rd.forward(request, response);
+	}
 
-    // Novo contato
-    protected void novoContato(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        contato.setNome(request.getParameter("nome"));
-        contato.setFone(request.getParameter("fone"));
-        contato.setEmail(request.getParameter("email"));
-        dao.inserirContato(contato);
-        response.sendRedirect("main");
-    }
+	// Novo contato (viagem)
+	protected void novoContato(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		viagem.setNome(request.getParameter("nome"));
+		viagem.setFone(request.getParameter("fone"));
+		viagem.setEmail(request.getParameter("email"));
+		viagem.setDestino(request.getParameter("destino"));
+		viagem.setData_partida(request.getParameter("data_partida"));
+		viagem.setData_retorno(request.getParameter("data_retorno"));
+		viagem.setCapacidade(Integer.parseInt(request.getParameter("capacidade"))); // A capacidade deve ser convertida
+																					// para int
 
-    // Listar Viagens
-    protected void listarViagens(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        ArrayList<Viagem> listaViagens = dao.listarViagens();
-        request.setAttribute("viagens", listaViagens);
-        RequestDispatcher rd = request.getRequestDispatcher("viagens.jsp");
-        rd.forward(request, response);
-    }
+		dao.inserirContato(viagem); // Certifique-se de que o método no DAO aceita o novo objeto
+		response.sendRedirect("main");
+	}
 
- // Novo Viagem
-    protected void novoViagem(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Viagem viagem = new Viagem(); // Certifique-se de criar uma nova instância de Viagem
-        // Criação do objeto Viagem com os dados do formulário
-        viagem.setDestino(request.getParameter("destino"));
-        viagem.setDataPartida(LocalDate.parse(request.getParameter("data_partida")));
-        viagem.setDataRetorno(LocalDate.parse(request.getParameter("data_retorno")));
-        viagem.setCapacidade(Integer.parseInt(request.getParameter("capacidade")));
+	// Remover um contato
 
-        // Invocar o método inserirViagem passando o objeto viagem e capturar o retorno
-        boolean sucesso = dao.inserirViagem(viagem);
-
-        // Verifica se a inserção foi bem-sucedida
-        if (sucesso) {
-            System.out.println("Viagem inserida com sucesso: " + viagem);
-        } else {
-            System.out.println("Falha ao inserir a viagem: " + viagem);
-            // Opcional: redirecionar para uma página de erro ou mostrar mensagem ao usuário
-            request.setAttribute("mensagemErro", "Falha ao inserir a viagem. Por favor, tente novamente.");
-            request.getRequestDispatcher("viagens.jsp").forward(request, response); // Redireciona para o formulário
-            return; // Para garantir que o redirecionamento não aconteça duas vezes
-        }
-
-        // Redirecionar para a lista de viagens
-        response.sendRedirect("listarViagens");
-    }
-
+	protected void removerContato(HttpServletRequest request, HttpServletResponse response, JavaBeans contato)
+			throws ServletException, IOException {
+		// Recebimento do id do contato a ser excluido
+		String idcon = request.getParameter("idcon");
+		// setar a variável idcon JavaBeans
+		contato.setIdcon(idcon);
+		// executar o método deletarContato (DAO) passando o objeto contato
+		dao.deletarContato(contato);
+		// redirecionar para o documento agenda.jsp (atualizando as alterações)
+		response.sendRedirect("main");
+	}
 }

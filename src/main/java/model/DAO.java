@@ -7,129 +7,95 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class DAO {
-	/** Módulo de conexão **/
-	// Parâmetros de conexão
-	private String driver = "com.mysql.cj.jdbc.Driver";
-	private String url = "jdbc:mysql://127.0.0.1:3306/dbagenda?useTimezone=true&serverTimezone=UTC";
-	private String user = "root";
-	private String password = "admin121";
+    /** Módulo de conexão **/
+    // Parâmetros de conexão
+    private String driver = "com.mysql.cj.jdbc.Driver";
+    private String url = "jdbc:mysql://127.0.0.1:3306/dbagenda?useTimezone=true&serverTimezone=UTC";
+    private String user = "root";
+    private String password = "admin121";
 
-	// Método de conexão
-	private Connection conectar() {
-		Connection con = null;
-		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
-			return con;
-		} catch (Exception e) {
-			System.out.println(e);
-			return null;
-		}
-	}
-	
-	public boolean inserirViagem(Viagem viagem) {
-	    String create = "INSERT INTO viagens(destino, data_partida, data_retorno, capacidade) VALUES (?, ?, ?, ?)";
-	    try {
-	        Connection con = conectar();
-	        PreparedStatement pst = con.prepareStatement(create);
-	        // Substituir os parâmetros (?) pelo conteúdo do objeto Viagem
-	        pst.setString(1, viagem.getDestino());
-	        pst.setDate(2, java.sql.Date.valueOf(viagem.getDataPartida()));
-	        pst.setDate(3, java.sql.Date.valueOf(viagem.getDataRetorno()));
-	        pst.setInt(4, viagem.getCapacidade());
+    // Método de conexão
+    private Connection conectar() {
+        Connection con = null;
+        try {
+            Class.forName(driver);
+            con = DriverManager.getConnection(url, user, password);
+            return con;
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
 
-	        int rowsAffected = pst.executeUpdate(); // Executa a inserção e retorna o número de linhas afetadas
-	        con.close();
-	        
-	        // Verifica se a inserção foi bem-sucedida
-	        if (rowsAffected > 0) {
-	            System.out.println("Viagem inserida com sucesso: " + viagem);
-	            return true; // Inserção bem-sucedida
-	        } else {
-	            System.out.println("Falha ao inserir a viagem: Nenhuma linha afetada.");
-	            return false; // Inserção falhou
-	        }
-	    } catch (Exception e) {
-	        System.out.println("Erro ao inserir viagem: " + e.getMessage());
-	        return false; // Retorna falso em caso de exceção
-	    }
-	}
+    // Método para inserir uma nova viagem
+    public void inserirContato(JavaBeans viagem) {
+        String create = "INSERT INTO contatos (nome, fone, email, destino, data_partida, data_retorno, capacidade) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            // Abrir conexão
+            Connection con = conectar();
+            // Preparar a query para execução no banco de dados
+            PreparedStatement pst = con.prepareStatement(create);
+            // Substituir os parâmetros (?) pelo conteúdo das variáveis JavaBeans
+            pst.setString(1, viagem.getNome());
+            pst.setString(2, viagem.getFone());
+            pst.setString(3, viagem.getEmail());
+            pst.setString(4, viagem.getDestino());
+            pst.setString(5, viagem.getData_partida());
+            pst.setString(6, viagem.getData_retorno());
+            pst.setInt(7, viagem.getCapacidade());
+            // Executar a query
+            pst.executeUpdate();
+            // Encerrar a conexão com o banco
+            con.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
-	    public ArrayList<Viagem> listarViagens() {
-	        ArrayList<Viagem> viagens = new ArrayList<>();
-	        String read = "SELECT * FROM viagens ORDER BY destino";
-	        try {
-	            Connection con = conectar();
-	            PreparedStatement pst = con.prepareStatement(read);
-	            ResultSet rs = pst.executeQuery();
-	            while (rs.next()) {
-	                Viagem viagem = new Viagem();
-	                viagem.setIdviagem(rs.getInt("idviagem"));
-	                viagem.setDestino(rs.getString("destino"));
-	                viagem.setDataPartida(rs.getDate("data_partida").toLocalDate());
-	                viagem.setDataRetorno(rs.getDate("data_retorno").toLocalDate());
-	                viagem.setCapacidade(rs.getInt("capacidade"));
-	                viagens.add(viagem);
-	            }
-	            con.close();
-	        } catch (Exception e) {
-	            System.out.println(e);
-	        }
-	        return viagens;
-	    }
+    /** CRUD READ **/
+    public ArrayList<JavaBeans> listarContatos() {
+        // Criando um objeto para acessar a classe JavaBeans
+        ArrayList<JavaBeans> contatos = new ArrayList<>();
+        String read = "SELECT * FROM contatos ORDER BY nome"; // Certifique-se de que a consulta está correta
+        try {
+            Connection con = conectar();
+            PreparedStatement pst = con.prepareStatement(read);
+            ResultSet rs = pst.executeQuery();
+            // o laço abaixo será executado enquanto houver contatos
+            while (rs.next()) {
+                // variáveis de apoio que recebem os dados do banco
+                String idcon = rs.getString("idcon"); // Supondo que o nome da coluna no banco é idcon
+                String destino = rs.getString("destino"); // Coluna para destino
+                String data_partida = rs.getString("data_partida"); // Coluna para data de partida
+                String data_retorno = rs.getString("data_retorno"); // Coluna para data de retorno
+                String nome = rs.getString("nome"); // Coluna para nome
+                String fone = rs.getString("fone"); // Coluna para telefone
+                String email = rs.getString("email"); // Coluna para e-mail
+                int capacidade = rs.getInt("capacidade"); // Coluna para capacidade
 
-	public void inserirContato(JavaBeans contato) {
-		String create = "insert into contatos(nome,fone,email) values (?,?,?)";
-		try {
-			// Abrir conexão
-			Connection con = conectar();
-			// Preparar a query para execução no banco de dados
-			PreparedStatement pst = con.prepareStatement(create);
-			// Substituir os parâmetros (?) pelo conteúdo das váriaveis JavaBeans
-			pst.setString(1, contato.getNome());
-			pst.setString(2, contato.getFone());
-			pst.setString(3, contato.getEmail());
-			// Executar a query
-			pst.executeUpdate();
-			// Encerrar a conexão com o banco
-			con.close();
+                // populando o ArrayList
+                contatos.add(new JavaBeans(idcon, destino, data_partida, data_retorno, nome, fone, email, capacidade));
+            }
+            con.close();
+            return contatos;
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
 
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-
-	}
-
-	/** CRUD READ **/
-	public ArrayList<JavaBeans> listarContatos() {
-		// Criando um objeto para acessar a classe JavaBeans
-		ArrayList<JavaBeans> contatos = new ArrayList<>();
-		String read = "select * from contatos order by nome";
-		try {
-			Connection con = conectar();
-			PreparedStatement pst = con.prepareStatement(read);
-			ResultSet rs = pst.executeQuery();
-			// o laço abaixo será executado enquanto houver contatos
-			while (rs.next()) {
-				// variaveis de apoio que recebem os dados do banco
-				String idcon = rs.getString(1);
-				String nome = rs.getString(2);
-				String fone = rs.getString(3);
-				String email = rs.getString(4);
-				// populando o ArrayList
-				contatos.add(new JavaBeans(idcon, nome, fone, email));
-			}
-			con.close();
-			return contatos;
-		} catch (Exception e) {
-			System.out.println(e);
-			return null;
-		}
-	}
-
-	/**
-	 * Teste de conexão public void testeConexao() { try { Connection con =
-	 * conectar(); System.out.println(con); con.close(); } catch(Exception e) {
-	 * System.out.println(e); } }
-	 **/
+    /* CRUD DELETE */
+    public void deletarContato(JavaBeans contato) {
+        String delete = "DELETE FROM contatos WHERE idcon=?";
+        try {
+            Connection con = conectar();
+            PreparedStatement pst = con.prepareStatement(delete);
+            pst.setString(1, contato.getIdcon());
+            pst.executeUpdate();
+            con.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 }
+

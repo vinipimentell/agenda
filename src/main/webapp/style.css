@@ -40,21 +40,154 @@ h1{
 
 
 #tabela {
-	margin-top: 30px;
+	width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
 }
 
-#tabela th {
-	border: 1px solid #ddd;
-	padding: 10px;
-	text-align: left;
-	background-color: #66bbff;
-	color: #fff;
-}
 
 header, footer {
     text-align: center;
     padding: 10px;
     background-color: #f8f8f8;
     border-bottom: 1px solid #ddd;
+}
+
+.Botao2{
+	text-decoration: none;
+	background-color: #d51213;
+	padding: 5px 10px 5px 10px;
+	color:#fff;
+	font-size:1.2em;
+	font-weight:700;
+	border-radius: 5px;
+}
+
+/* Resetando estilos básicos */
+body, h1, h2, p, ul, li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+/* Estilizando o corpo da página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Estilizando o cabeçalho */
+header {
+    background-color: #007BFF; /* Azul */
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Estilizando a navegação */
+nav {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+nav a {
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    text-align: center;
+}
+
+nav a.Botao {
+    border: 1px solid transparent;
+    border-radius: 5px;
+    transition: background-color 0.3s, border 0.3s;
+}
+
+nav a.Botao:hover {
+    background-color: white;
+    color: #0056b3; /* Azul mais escuro */
+    border: 1px solid #0056b3;
+}
+
+/* Estilizando a tabela */
+#tabela {
+
+}
+
+#tabela th, #tabela td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+#tabela th {
+    background-color: #007BFF; /* Azul */
+    color: white;
+}
+
+/* Estilizando a seção de conteúdo */
+section {
+    padding: 20px;
+    background-color: white; /* Branco */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilizando o rodapé */
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #0056b3; /* Azul escuro */
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Estilizando o formulário */
+form {
+    background-color: white; /* Branco */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px auto; /* Centraliza o formulário */
+}
+
+/* Estilizando a tabela do formulário */
+table {
+    width: 100%;
+    margin: 10px 0;
+}
+
+th {
+    text-align: left;
+    padding: 10px 0;
+}
+
+input[type="text"], input[type="email"], input[type="date"], input[type="number"] {
+    width: 100%; /* Ocupa toda a largura da célula */
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Para que padding não afete o tamanho */
+}
+
+input[type="submit"].Botao {
+    background-color: #007BFF; /* Azul */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"].Botao:hover {
+    background-color: #0056b3; /* Azul mais escuro */
 }
 
